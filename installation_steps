@@ -1,0 +1,45 @@
+1.  Download the latest version of Oracle JDK from the link below. Here we use version 19 for JDK and a debian package.
+   https://www.oracle.com/java/technologies/downloads/
+2.  In teminal navigate to the setup package .deb file you just downloaded and run the command below to start the installation process:
+    sudo dpkg -i jdk-19_linux-x64_bin.deb
+3.  If there are any errors like dependency problems install the liblraries:
+    sudo apt-get install libc6-i386 libc6-x32
+  and repeat step 2
+4.  Once the setting up jdk is done, check versio of java:
+    java --version
+  You might get errors like:
+  Command 'java' not found, but can be installed with:
+  (list of openjdks)
+  This means there is no PATH variable set for java.
+5.  So we need to create on, but before that create symbolic links to executable files:
+    sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-19/bin/java 1
+    sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk-19/bin/javac 1
+    sudo update-alternatives --install /usr/bin/jar jar /usr/lib/jvm/jdk-19/bin/jar 1
+6.  Set Java JDK-19 to default:
+    sudo update-alternatives --config java
+    sudo update-alternatives --config javac
+    sudo update-alternatives --config jar
+7.  Set JAVA_HOME path variable:
+  Set JAVA_HOME for current command console, that will work until you close it:
+    export JAVA_HOME=/usr/lib/jvm/jdk-19
+    setenv JAVA_HOME=/usr/lib/jvm/jdk-19
+
+    sudo gedit /etc/profile.d/jdk.sh
+    then add following lines:
+    export J2SDKDIR=/usr/lib/jvm/jdk-19
+    export J2REDIR=/usr/lib/jvm/jdk-19
+    export PATH=$PATH:/usr/lib/jvm/jdk-19/bin:/usr/lib/jvm/jdk-19/db/bin
+    export JAVA_HOME=/usr/lib/jvm/jdk-19
+    export DERBY_HOME=/usr/lib/jvm/jdk-19/db
+    
+    And create anther one for C shell:
+    sudo gedit /etc/profile.d/jdk.csh
+    add following lines and save it:
+    setenv J2SDKDIR /usr/lib/jvm/jdk-19
+    setenv J2REDIR /usr/lib/jvm/jdk-19
+    setenv PATH ${PATH}:/usr/lib/jvm/jdk-19/bin:/usr/lib/jvm/jdk-19/db/bin
+    setenv JAVA_HOME /usr/lib/jvm/jdk-19
+    setenv DERBY_HOME /usr/lib/jvm/jdk-19/db
+  
+8.  Finally, change the permissions via command, and it should take place next time you log in.
+    sudo chmod +x /etc/profile.d/jdk.csh /etc/profile.d/jdk.sh
